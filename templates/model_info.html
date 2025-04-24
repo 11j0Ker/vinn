@@ -1,0 +1,311 @@
+{% extends 'base-index.html' %}
+{% load static %}
+
+{% block css %}
+    <link href="{% static 'main/css/model_info.css' %}" rel="stylesheet" type="text/css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #1e1e2f;
+        }
+
+        .hero-section {
+            text-align: center;
+            padding: 3rem 0;
+            background: linear-gradient(135deg, rgba(26, 31, 60, 0.1), rgba(45, 54, 99, 0.1));
+            border-radius: 20px;
+            margin-bottom: 2rem;
+        }
+
+        .hero-title {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .hero-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            border-radius: 2px;
+        }
+
+        .hero-description {
+            color: #4a5568;
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .model-card {
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .model-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-header {
+            background-color: #3a3a4f;
+            color: #fff;
+            padding: 20px;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .model-icon i {
+            font-size: 28px;
+            margin-right: 15px;
+            color: #007bff;
+        }
+
+        .feature-section h5 {
+            color: #00bcd4;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .stat-icon i {
+            font-size: 32px;
+            color: #ff5722;
+            margin-right: 10px;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            font-size: 16px;
+            color: #b0b0b0;
+        }
+    </style>
+{% endblock %}
+
+{% block main_body %}
+    <div class="container-fluid">
+        <!-- 头部区域 -->
+        <div class="header-section text-center">
+            <div class="hero-section">
+                <h1 class="hero-title">
+                    模型概述
+                </h1>
+                <p class="hero-description">
+                    网络模型的介绍：Transformer、蒸馏、卷积神经网络、门控循环单元
+                </p>
+                <div class="model-stats d-flex justify-content-around">
+                    <div class="stat-item">
+                        <div class="stat-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <div>
+                            <div class="stat-number">4</div>
+                            <div class="stat-label">核心模型</div>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon">
+                            <i class="fas fa-layer-group"></i>
+                        </div>
+                        <div>
+                            <div class="stat-number">128</div>
+                            <div class="stat-label">特征维度</div>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div>
+                            <div class="stat-number">98%+</div>
+                            <div class="stat-label">检测准确率</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+        <!-- 模型卡片区域 -->
+        <div class="row">
+            <!-- Transformer模型卡片 -->
+            <div class="col-md-6">
+                <div class="model-card">
+                    <div class="card-header">
+                        <div class="model-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <h4>Transformer 模型</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="feature-section">
+                            <h5>核心特点</h5>
+                            <ul>
+                                <li>基于注意力机制的深度学习模型</li>
+                                <li>在自然语言处理任务中表现优异</li>
+                                <li>支持并行计算，训练速度快</li>
+                                <li>适用于大规模数据集</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 蒸馏模型卡片 -->
+            <div class="col-md-6">
+                <div class="model-card">
+                    <div class="card-header">
+                        <div class="model-icon">
+                            <i class="fas fa-flask"></i>
+                        </div>
+                        <h4>蒸馏模型</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="feature-section">
+                            <h5>核心特点</h5>
+                            <ul>
+                                <li>通过知识蒸馏技术提升模型性能</li>
+                                <li>减少模型复杂度，提升推理速度</li>
+                                <li>适用于资源受限的环境</li>
+                                <li>保持高准确率的同时降低计算成本</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CNN模型卡片 -->
+            <div class="col-md-6">
+                <div class="model-card">
+                    <div class="card-header">
+                        <div class="model-icon">
+                            <i class="fas fa-image"></i>
+                        </div>
+                        <h4>卷积神经网络（CNN）</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="feature-section">
+                            <h5>核心特点</h5>
+                            <ul>
+                                <li>擅长处理图像数据</li>
+                                <li>通过卷积层提取特征</li>
+                                <li>在计算机视觉任务中广泛应用</li>
+                                <li>支持多层次特征学习</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GRU模型卡片 -->
+            <div class="col-md-6">
+                <div class="model-card">
+                    <div class="card-header">
+                        <div class="model-icon">
+                            <i class="fas fa-sync-alt"></i>
+                        </div>
+                        <h4>门控循环单元（GRU）</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="feature-section">
+                            <h5>核心特点</h5>
+                            <ul>
+                                <li>适用于序列数据处理</li>
+                                <li>比LSTM更简单且高效</li>
+                                <li>在时间序列预测中表现良好</li>
+                                <li>减少梯度消失问题</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 数据集信息卡片 -->
+        <div class="dataset-section">
+            <div class="model-card">
+                <div class="card-header">
+                    <div class="model-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <h4>NSL-KDD 数据集</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="dataset-stats">
+                                <div class="stat-group">
+                                    <h5>数据规模</h5>
+                                    <div class="stat-row">
+                                        <span>训练样本数</span>
+                                        <strong>125,973</strong>
+                                    </div>
+                                    <div class="stat-row">
+                                        <span>测试样本数</span>
+                                        <strong>22,544</strong>
+                                    </div>
+                                    <div class="stat-row">
+                                        <span>特征维度</span>
+                                        <strong>128</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="dataset-stats">
+                                <div class="stat-group">
+                                    <h5>攻击类型分布</h5>
+                                    <div class="stat-row">
+                                        <span>正常流量</span>
+                                        <strong>53.46%</strong>
+                                    </div>
+                                    <div class="stat-row">
+                                        <span>DOS攻击</span>
+                                        <strong>36.65%</strong>
+                                    </div>
+                                    <div class="stat-row">
+                                        <span>其他攻击</span>
+                                        <strong>9.89%</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script src="https://kit.fontawesome.com/your-code.js" crossorigin="anonymous"></script>
+    <script src="{% static 'main/js/model_info.js' %}"></script>
+{% endblock %}

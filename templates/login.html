@@ -1,0 +1,535 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Login</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="{% static "myadmin/vendor/fontawesome-free/css/all.min.css" %}" rel="stylesheet" type="text/css">
+    <!-- Custom styles for this template-->
+    <link href="{% static "myadmin/css/sb-admin-2.min.css" %}" rel="stylesheet">
+    <style>
+        .bg-gradient-primary {
+            background: linear-gradient(135deg, #1a2b4d 0%, #0a1528 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bg-gradient-primary::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                    45deg,
+                    rgba(255, 255, 255, 0.03) 0px,
+                    rgba(255, 255, 255, 0.03) 1px,
+                    transparent 1px,
+                    transparent 10px
+            );
+            animation: backgroundMove 20s linear infinite;
+        }
+
+        @keyframes backgroundMove {
+            0% {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+            100% {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-control-user {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(78, 115, 223, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .form-control-user:focus {
+            background: #fff;
+            border-color: #4e73df;
+            box-shadow: 0 0 15px rgba(78, 115, 223, 0.2);
+        }
+
+        .btn-user {
+            background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+            border: none;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            transition: all 0.3s ease;
+        }
+
+        .btn-user::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+            z-index: -1;
+        }
+
+        .btn-user:hover::before {
+            left: 100%;
+        }
+
+        .system-title {
+            position: relative;
+            display: inline-block;
+            color: #1a2b4d;
+            font-weight: 600;
+            margin-bottom: 2rem;
+        }
+
+        .system-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, #4e73df, #224abe);
+            border-radius: 3px;
+        }
+
+        .captcha-container {
+            margin-bottom: 1rem;
+        }
+
+        .captcha-container img {
+            height: 32px;
+            border-radius: 4px;
+        }
+
+        .captcha-container input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #d1d3e2;
+            border-radius: 25px;
+            font-size: 16px;
+        }
+
+        .refresh-captcha {
+            color: #4e73df;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .refresh-captcha:hover {
+            color: #224abe;
+            transform: rotate(180deg);
+        }
+
+        .error-message {
+            padding: 10px;
+            margin-top: 1rem;
+            border-radius: 5px;
+            text-align: center;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .error-message.error {
+            background-color: #ffe6e6;
+            color: #dc3545;
+        }
+
+        .error-message.info {
+            background-color: #e6f3ff;
+            color: #0066cc;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
+
+        .toast-notification {
+            background: white;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            margin-bottom: 10px;
+            opacity: 0;
+            transform: translateX(100%);
+            animation: slideIn 0.3s ease forwards;
+            max-width: 300px;
+        }
+
+        .toast-notification.error {
+            border-left: 4px solid #dc3545;
+        }
+
+        .toast-message {
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .toast-message i {
+            margin-right: 8px;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+        }
+
+        .cyber-container {
+            padding: 2rem;
+            position: relative;
+        }
+
+        .tech-title {
+            color: #1a2b4d;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .feature-list {
+            margin: 2rem 0;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: rgba(78, 115, 223, 0.05);
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-item:hover {
+            transform: translateX(10px);
+        }
+
+        .feature-item i {
+            font-size: 1.5rem;
+            margin-right: 1rem;
+            padding: 1rem;
+            background: rgba(78, 115, 223, 0.1);
+            border-radius: 50%;
+        }
+
+        .feature-text h5 {
+            margin-bottom: 0.5rem;
+            color: #1a2b4d;
+        }
+
+        .feature-text p {
+            margin: 0;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .cyber-animation {
+            position: relative;
+            margin-top: 3rem;
+        }
+
+        .pulse-circle {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: rgba(78, 115, 223, 0.1);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .security-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 2rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .stat-item i {
+            font-size: 2rem;
+            color: #4e73df;
+            margin-bottom: 0.5rem;
+        }
+
+        .counter {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1a2b4d;
+        }
+
+        .stat-item p {
+            margin: 0;
+            color: #666;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(78, 115, 223, 0.4);
+            }
+            70% {
+                transform: scale(1);
+                box-shadow: 0 0 0 20px rgba(78, 115, 223, 0);
+            }
+            100% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(78, 115, 223, 0);
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gradient-primary">
+
+<div class="toast-container"></div>
+
+<div class="container">
+
+    <!-- Outer Row -->
+    <div class="row justify-content-center">
+
+        <div class="col-xl-14 col-lg-12 col-md-12">
+
+            <div style="opacity: 0.95" class="card o-hidden border-0 shadow-lg my-5">
+                <div class="card-body p-0">
+                    <!-- Nested Row within Card Body -->
+                    <div class="row">
+                        <!-- 左侧信息展示区 -->
+                        <div class="col-lg-7 d-none d-lg-block">
+                            <div class="p-5">
+                                <div class="cyber-container">
+                                    <div class="cyber-info">
+
+                                        <div class="feature-list">
+                                            <div class="feature-item">
+                                                <i class="fas fa-brain text-primary"></i>
+                                                <div class="feature-text">
+                                                    <h5>深度学习检测</h5>
+                                                    <p>采用先进的深度学习算法，基于先进深度学习架构
+                                                        CNN GRU Transformer</p>
+                                                </div>
+                                            </div>
+                                            <div class="feature-item">
+                                                <i class="fas fa-shield-virus text-primary"></i>
+                                                <div class="feature-text">
+                                                    <h5>威胁防护</h5>
+                                                    <p>快速识别和阻断潜在威胁，保护系统安全</p>
+                                                </div>
+                                            </div>
+                                            <div class="feature-item">
+                                                <i class="fas fa-chart-line text-primary"></i>
+                                                <div class="feature-text">
+                                                    <h5>智能分析报告</h5>
+                                                    <p>提供详细的安全分析报告和可视化数据</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="cyber-animation">
+                                            <div class="security-stats">
+                                                <div class="stat-item">
+                                                    <i class="fas fa-shield-alt"></i>
+                                                    <span class="counter">99.9%</span>
+                                                    <p>防护率</p>
+                                                </div>
+                                                <div class="stat-item">
+                                                    <i class="fas fa-bolt"></i>
+                                                    <span class="counter">0.1s</span>
+                                                    <p>响应时间</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 右侧登录区 -->
+                        <div class="col-lg-5">
+                            <div class="p-5">
+                                <div class="text-center">
+                                    <h1 class="system-title" style="font-size: 1.8rem;">
+                                        <i class="fas fa-shield-alt mr-2"></i>
+                                        深度学习网络攻击检测与分类系统
+                                    </h1>
+                                    <div class="subtitle-container mb-4">
+                                        <p class="tech-subtitle">基于先进深度学习架构</p>
+                                        <div class="architecture-chart mt-3 mb-4"></div>
+                                    </div>
+                                </div>
+                                <form action="{% url 'myadmin_do_login' %}" method="post" class="user" id="loginForm">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <input class="form-control form-control-user"
+                                               name="username"
+                                               placeholder="账号" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="password" name="pass" class="form-control form-control-user"
+                                               id="exampleInputPassword" placeholder="密码" required>
+                                    </div>
+                                    <div class="form-group captcha-container">
+                                        <div style="display: flex; align-items: center; gap: 10px;">
+                                            {{ captcha_form.captcha }}
+                                            <a href="javascript:void(0);"
+                                               onclick="refreshPage();"
+                                               class="refresh-captcha"
+                                               title="点击刷新验证码">
+                                                <i class="fas fa-sync-alt"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary btn-user btn-block">
+                                        登录
+                                    </button>
+                                </form>
+                                <hr>
+
+                                <div class="text-center">
+                                    <a class="small" href="{% url 'myadmin_register' %}">
+                                        <i class="fas fa-user-plus mr-1"></i>创建账户
+                                    </a>
+                                </div>
+                                <div class="text-center">
+                                    <a class="small" href="{% url 'forgot_pd' %}">
+                                        <i class="fas fa-key mr-1"></i>忘记密码?
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Bootstrap core JavaScript-->
+<script src="{% static "myadmin/vendor/jquery/jquery.min.js" %}></script>
+    <script src="{% static "myadmin/vendor/bootstrap/js/bootstrap.bundle.min.js" %}></script>
+
+<!-- Core plugin JavaScript-->
+<script src="{% static "myadmin/vendor/jquery-easing/jquery.easing.min.js" %}></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="{% static "myadmin/js/sb-admin-2.min.js" %}></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // 验证码输入框样式
+        var captchaInput = document.getElementById("id_captcha_1");
+        captchaInput.classList.add('captcha-input');
+        captchaInput.setAttribute('placeholder', '验证码');
+
+        // 如果有消息，显示在右上角
+        {% if messages %}
+            {% for message in messages %}
+                showToast("{{ message }}", "{{ message.tags }}");
+            {% endfor %}
+        {% endif %}
+
+        // 表单提交验证
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            const username = this.querySelector('input[name="username"]').value;
+            const password = this.querySelector('input[name="pass"]').value;
+            const captcha = this.querySelector('input[name="captcha_1"]').value;
+
+            if (!username || !password || !captcha) {
+                e.preventDefault();
+                showToast('请填写所有必填字段', 'error');
+            }
+        });
+    });
+
+    function showToast(message, type = 'error') {
+        const container = document.querySelector('.toast-container');
+        const toast = document.createElement('div');
+        toast.className = `toast-notification ${type}`;
+        toast.innerHTML = `
+            <div class="toast-message">
+                <i class="fas fa-${type === 'success' ? 'check' : 'exclamation'}-circle"></i>
+                ${message}
+            </div>
+        `;
+
+        container.appendChild(toast);
+
+        setTimeout(() => {
+            toast.classList.add('fade-out');
+            setTimeout(() => {
+                toast.remove();
+            }, 300);
+        }, 3000);
+    }
+
+    function refreshPage() {
+        // 清除所有现有的消息
+        document.querySelector('.toast-container').innerHTML = '';
+        // 刷新页面
+        window.location.reload();
+    }
+</script>
+</body>
+</html>

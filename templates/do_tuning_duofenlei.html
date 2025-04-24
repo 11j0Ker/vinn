@@ -1,0 +1,222 @@
+{% extends 'base-index.html' %}
+{% load static %}
+
+{% block css %}
+    <link href="{% static 'main/css/do_tuning.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block main_body %}
+    <div class="container-fluid">
+        <!-- 头部区域 -->
+        <div class="header-section">
+            <h3>模型调优</h3>
+        </div>
+
+        <!-- 参数调整区域 -->
+        <div class="parameter-section">
+            <div class="parameter-header">
+                <h4 class="parameter-title">
+                    <i class="fas fa-cogs"></i> 参数配置
+                </h4>
+                <a href="{% url 'reset_parameter_lstm2' %}" class="reset-button">
+                    重置参数 <i class="fas fa-redo"></i>
+                </a>
+            </div>
+
+            <form role="form" method="post" id="tuningForm">
+                {% csrf_token %}
+                <div class="parameter-group">
+                    <!-- 学习率 -->
+                        <div class="parameter-row">
+                        <label class="parameter-label" title="学习率控制模型参数更新的步长">
+                            学习率 (lr)
+                            <i class="fas fa-info-circle"></i>
+                        </label>
+                        <div class="range-container">
+                            <input name="lr" type="range" class="form-range" min="0.000001" max="0.01" step="0.000001"
+                                   id="customRange1"
+                                   value="{% if lr %}{{ lr }}{% else %}0.000005{% endif %}"
+                                   oninput="updateValue(this.value, 'customRangeValue1')">
+                            <span id="customRangeValue1" class="range-value">{% if lr %}{{ lr }}{% else %}
+                                0.000005{% endif %}</span>
+                        </div>
+                        <div class="parameter-info">学习率越小，训练越稳定，但速度越慢</div>
+                    </div>
+
+
+
+                    <!-- 权重衰减 -->
+                    <div class="parameter-row">
+                        <label class="parameter-label" title="权重衰减用于防止过拟合">
+                            权重衰减 (wd)
+                            <i class="fas fa-info-circle"></i>
+                        </label>
+                        <div class="range-container">
+                            <input name="wd" type="range" class="form-range" min="0.000001" max="0.0001" step="0.000001"
+                                   id="customRange2"
+                                   value="{% if wd %}{{ wd }}{% else %}0.000006{% endif %}"
+                                   oninput="updateValue(this.value, 'customRangeValue2')">
+                            <span id="customRangeValue2" class="range-value">{% if wd %}{{ wd }}{% else %}
+                                0.000006{% endif %}</span>
+                        </div>
+                        <div class="parameter-info">权重衰减越大，正则化效果越强</div>
+                    </div>
+
+                    <!-- 批量大小 -->
+                    <div class="parameter-row">
+                        <label class="parameter-label" title="批量大小影响每次参数更新的样本数量">
+                            批量大小 (batch_size)
+                            <i class="fas fa-info-circle"></i>
+                        </label>
+                        <div class="range-container">
+                            <input name="batch_size" type="range" class="form-range" min="32" max="512" step="32"
+                                   id="customRange3"
+                                   value="{% if batch_size %}{{ batch_size }}{% else %}256{% endif %}"
+                                   oninput="updateValue(this.value, 'customRangeValue3')">
+                            <span id="customRangeValue3" class="range-value">{% if batch_size %}
+                                {{ batch_size }}{% else %}256{% endif %}</span>
+                        </div>
+                        <div class="parameter-info">批量大小越大，训练速度越快，但内存占用越高</div>
+                    </div>
+
+                    <!-- 训练轮数 -->
+                    <div class="parameter-row">
+                        <label class="parameter-label" title="训练轮数控制模型训练的迭代次数">
+                            训练轮数 (num_epochs)
+                            <i class="fas fa-info-circle"></i>
+                        </label>
+                        <div class="range-container">
+                            <input name="num_epochs" type="range" class="form-range" min="10" max="100" step="1"
+                                   id="customRange4"
+                                   value="{% if num_epochs %}{{ num_epochs }}{% else %}20{% endif %}"
+                                   oninput="updateValue(this.value, 'customRangeValue4')">
+                            <span id="customRangeValue4" class="range-value">{% if num_epochs %}
+                                {{ num_epochs }}{% else %}20{% endif %}</span>
+                        </div>
+                        <div class="parameter-info">训练轮数越多，模型拟合效果越好，但可能过拟合</div>
+                    </div>
+                    <!-- 批量大小 -->
+                    <!-- Alpha 参数 -->
+                    <div class="parameter-row">
+                        <label class="parameter-label" title="Alpha 控制硬损失与软损失的权衡">
+                            Alpha (alpha)
+                            <i class="fas fa-info-circle"></i>
+                        </label>
+                        <div class="range-container">
+                            <input name="alpha" type="range" class="form-range" min="0.0" max="1.0" step="0.05"
+                                   id="customRangeAlpha"
+                                   value="{% if alpha %}{{ alpha }}{% else %}0.5{% endif %}"
+                                   oninput="updateValue(this.value, 'customRangeValueAlpha')">
+                            <span id="customRangeValueAlpha" class="range-value">{% if alpha %}{{ alpha }}{% else %}
+                                0.5{% endif %}</span>
+                        </div>
+                        <div class="parameter-info">Alpha 控制硬损失和软损失之间的权重。较高的值更关注硬损失。</div>
+                    </div>
+
+                    <!-- Temperature 参数 -->
+                    <div class="parameter-row">
+                        <label class="parameter-label" title="Temperature 控制软目标分布的平滑程度">
+                            Temperature (temperature)
+                            <i class="fas fa-info-circle"></i>
+                        </label>
+                        <div class="range-container">
+                            <input name="temperature" type="range" class="form-range" min="1.0" max="10.0" step="0.1"
+                                   id="customRangeTemperature"
+                                   value="{% if temperature %}{{ temperature }}{% else %}2.0{% endif %}"
+                                   oninput="updateValue(this.value, 'customRangeValueTemperature')">
+                            <span id="customRangeValueTemperature" class="range-value">{% if temperature %}
+                                {{ temperature }}{% else %}2.0{% endif %}</span>
+                        </div>
+                        <div class="parameter-info">Temperature 控制教师模型输出的平滑度。较高的温度会产生更平滑的概率分布。</div>
+                    </div>
+
+                  <div class="parameter-row">
+                        <label class="parameter-label" title="开启过采样可以增加少数类样本的数量，有助于平衡数据集">
+                            开启过采样
+                            <i class="fas fa-info-circle"></i>
+                        </label>
+                        <div class="switch-container">
+                            <label class="switch">
+                                <input name="overSampling" type="checkbox" id="overSamplingSwitch"
+                                       {% if overSampling %}checked{% endif %}>
+                                <span class="slider"></span>
+                            </label>
+{#                            <span class="switch-label">{% if over_sampling %}已启用{% else %}未启用{% endif %}</span>#}
+                        </div>
+                        <div class="parameter-info">如果启用，模型将在训练时应用过采样。</div>
+                    </div>
+
+                    <input type="hidden" id="overSamplingValue" name="overSampling" value="{% if overSampling %}1{% else %}0{% endif %}">
+                </div>
+
+
+                <!-- 性能指标区域 -->
+                <div class="metrics-section">
+                    <h5 class="mb-4">模型性能指标</h5>
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-label">推理集准确率</div>
+                            <div class="progress">
+                                <div id="accuracy" class="progress-bar" style="width: {{ accuracy }}%">{{ accuracy }}%
+                                </div>
+                            </div>
+                            <i id="i-accuracy-down" class="fas fa-long-arrow-alt-down trend-indicator text-danger"
+                               style="display: none"></i>
+                            <i id="i-accuracy-up" class="fas fa-long-arrow-alt-up trend-indicator text-success"
+                               style="display: none"></i>
+                        </div>
+
+                        <div class="metric-card">
+                            <div class="metric-label">损失值</div>
+                            <div class="progress">
+                                <div id="loss" class="progress-bar bg-danger" style="width: {{ loss }}">{{ loss }}
+                                </div>
+                            </div>
+                            <i id="i-loss-down" class="fas fa-long-arrow-alt-down trend-indicator text-success"
+                               style="display: none"></i>
+                            <i id="i-loss-up" class="fas fa-long-arrow-alt-up trend-indicator text-danger"
+                               style="display: none"></i>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">测试集准确率</div>
+                            <div class="progress">
+                                <div id="test-accuracy" class="progress-bar bg-danger"
+                                     style="width: {{ test_accuracy }}%">{{ test_accuracy }}%
+                                </div>
+                            </div>
+                            <i id="i-test-accuracy-down" class="fas fa-long-arrow-alt-down trend-indicator text-success"
+                               style="display: none"></i>
+                            <i id="i-test-accuracy-up" class="fas fa-long-arrow-alt-up trend-indicator text-danger"
+                               style="display: none"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-container">
+                    <button type="button" id="submitButton" class="btn btn-success train-button">
+                        <i class="fas fa-play"></i> 确认并开始训练
+                    </button>
+                    <div class="spinner-border text-primary" style="display: none" role="status" id="loading">
+                        <span class="visually-hidden"></span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script src="{% static 'main/js/do_tuning_duofenlei.js' %}"></script>
+     <script>
+    // 监听开关状态变化
+    document.getElementById('overSamplingSwitch').addEventListener('change', function() {
+        var overSamplingValue = document.getElementById('overSamplingValue');
+        // 如果开关被选中，则设置值为 1，否则为 0
+        if (this.checked) {
+            overSamplingValue.value = '1';
+        } else {
+            overSamplingValue.value = '0';
+        }
+    });
+</script>
+{% endblock %}

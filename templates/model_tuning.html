@@ -1,0 +1,69 @@
+{% extends 'base-index.html' %}
+{% load static %}
+
+{% block css %}
+    <link href="{% static 'main/css/model_tuning.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block main_body %}
+    <div class="container-fluid">
+        <!-- 头部区域 -->
+        <div class="header-section">
+            <h3 class="mb-3" style="color: #2c3e50; font-size: 32px">模型调优</h3>
+            <p class="text-muted">选择模型进行参数调优，提升模型在分类数据上的性能</p>
+        </div>
+
+        <!-- 模型卡片区域 -->
+        <div class="row justify-content-center">
+            <!-- 蒸馏 模型卡片 -->
+            <div class="col-md-5">
+                <div class="model-card">
+                    <div class="card-body">
+                        <div class="model-icon">
+                            <i class="fas fa-network-wired"></i> <!-- 使用神经网络图标 -->
+                        </div>
+                        <h4 class="model-title">二分类 模型</h4>
+                        <p class="model-description">
+                            二分类模型是机器学习和深度学习中的一个基本类型，用于预测目标变量（标签）有两个可能的类别。在二分类任务中，模型的目标是根据输入特征预测出一个类别标签，通常是 0 或 1。
+                        </p>
+                        <div class="mb-3">
+                            <span class="badge bg-primary">时间序列建模</span>
+                            <span class="badge bg-success">捕捉长期依赖</span>
+                            <span class="badge bg-info">抗梯度消失</span>
+                        </div>
+                        <a href="{% url 'do_tuning_model' %}" class="btn btn-primary tune-btn">
+                            开始调优 <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="model-card">
+                    <div class="card-body">
+                        <div class="model-icon">
+                            <i class="fas fa-network-wired"></i> <!-- 使用神经网络图标 -->
+                        </div>
+                        <h4 class="model-title">多分类 模型</h4>
+                        <p class="model-description">
+                         多分类（Multi-class）模型用于解决目标变量（标签）具有多个类别的分类问题。在多分类任务中，每个样本只能属于一个类别，目标是从多个类别中进行选择。
+                        </p>
+                        <div class="mb-3">
+                            <span class="badge bg-primary">时间序列建模</span>
+                            <span class="badge bg-success">捕捉长期依赖</span>
+                            <span class="badge bg-info">抗梯度消失</span>
+                        </div>
+                        <a href="{% url 'do_tuning_model_duofenlei' %}" class="btn btn-primary tune-btn">
+                            开始调优 <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script src="https://kit.fontawesome.com/your-code.js" crossorigin="anonymous"></script>
+    <script src="{% static 'main/js/model_tuning.js' %}"></script>
+{% endblock %}

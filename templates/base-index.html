@@ -1,0 +1,314 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>base</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="{% static "myadmin/vendor/fontawesome-free/css/all.min.css"%}" rel="stylesheet" type="text/css">
+    <!-- Custom styles for this template-->
+    <link href="{% static "myadmin/css/sb-admin-2.min.css"%}" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1a1f3c;    /* 深蓝色主色调 */
+            --accent-color: #2d3663;     /* 次要蓝色 */
+            --hover-color: #3f51b5;      /* 悬停色 */
+            --text-primary: #e9ecef;     /* 主要文字颜色 */
+            --danger-color: #ff4757;     /* 警告色 */
+            --success-color: #2ed573;    /* 成功色 */
+        }
+        
+        .modern-navbar {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            padding: 0.8rem 2.5rem;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.2);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .nav-item {
+            margin: 0 8px;
+            position: relative;
+        }
+        
+        .nav-link {
+            color: var(--text-primary) !important;
+            padding: 0.8rem 1.2rem !important;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--text-primary);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        
+        .nav-link:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-2px);
+        }
+        
+        .nav-link:hover::after {
+            width: 80%;
+        }
+        
+        .nav-link i {
+            margin-right: 8px;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover i {
+            transform: scale(1.1);
+            color: var(--success-color);
+        }
+        
+        .system-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .system-title i {
+            margin-right: 12px;
+            font-size: 2rem;
+            color: var(--success-color);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        #content-wrapper {
+            margin-top: 70px;
+            background: #f8f9fc;
+            min-height: calc(100vh - 70px);
+            padding: 20px;
+        }
+        
+        .user-profile {
+            background: rgba(255,255,255,0.08);
+            padding: 8px 20px;
+            border-radius: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .user-profile:hover {
+            background: rgba(255,255,255,0.15);
+            border-color: var(--success-color);
+        }
+
+        .dropdown-menu {
+            background: var(--primary-color);
+            border: 1px solid rgba(255,255,255,0.1);
+            margin-top: 10px;
+        }
+
+        .dropdown-item {
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-item:hover {
+            background: var(--accent-color);
+            color: var(--success-color);
+        }
+
+        /* 添加响应式优化 */
+        @media (max-width: 992px) {
+            .modern-navbar {
+                padding: 0.5rem 1rem;
+            }
+            
+            .nav-item {
+                margin: 5px 0;
+            }
+            
+            .system-title {
+                font-size: 1.3rem;
+            }
+            
+            .system-title i {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+    {% block css %}{% endblock %}
+</head>
+
+<body id="page-top" >
+    <!-- Modern Navigation Bar -->
+    <nav class="navbar navbar-expand-lg modern-navbar fixed-top">
+        <div class="system-title">
+            <i class="fas fa-brain"></i>
+            <span>深度学习-网络攻击检测与分类系统</span>
+        </div>
+        
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+            <i class="fas fa-bars" style="color: #fff"></i>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'ids_index' %}">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>漏洞扫描</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'ids_screen' %}">
+                        <i class="fas fa-chart-line"></i>
+                        <span>模型结果</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'ids_model' %}">
+                        <i class="fas fa-project-diagram"></i>
+                        <span>模型概述</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'ids_dataset_result' %}">
+                        <i class="fas fa-database"></i>
+                        <span>数据集分析</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'ids_model_tuning' %}">
+                        <i class="fas fa-sliders-h"></i>
+                        <span>模型调优</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link user-profile" href="#" id="userDropdown" role="button" data-toggle="dropdown">
+                        <i class="fas fa-user-shield"></i>
+                        <span>个人中心</span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right shadow">
+                        <a class="dropdown-item" href="{% url 'myadmin_logout' %}">
+                            <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                            退出登录
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Begin Page Content -->
+                <!-- <div class="container-fluid" style="opacity: 0.9"> -->
+                    {% block main_body %}
+                    {% endblock %}
+                <!-- </div> -->
+                {% block visualization_body %}
+                {% endblock %}
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>注意：漏洞扫描可能揭示敏感信息。请确保您在安全的环境中操作。</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="login.html">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="{% static "myadmin/vendor/jquery/jquery.min.js"%}"></script>
+    <script src="{% static "myadmin/vendor/bootstrap/js/bootstrap.bundle.min.js"%}"></script>
+    <script src="{% static "myadmin/vendor/bootstrap/js/bootstrap.js"%}"></script>
+    <!-- Core plugin JavaScript-->
+    <script src="{% static "myadmin/vendor/jquery-easing/jquery.easing.min.js"%}"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="{% static "myadmin/js/sb-admin-2.min.js"%}"></script>
+
+    <!-- Page level plugins -->
+    <script src="{% static "myadmin/vendor/chart.js/Chart.min.js"%}"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="{% static "myadmin/js/demo/chart-area-demo.js"%}"></script>
+    <script src="{% static "myadmin/js/demo/chart-pie-demo.js"%}"></script>
+    <script src="{% static "myadmin/js/demo/chart-bar-demo.js"%}"></script>
+    <script src="{% static "myadmin/vendor/datatables/jquery.dataTables.min.js"%}"></script>
+    <script src="{% static "myadmin/vendor/datatables/dataTables.bootstrap4.min.js"%}"></script>
+    <!-- Page level custom scripts -->
+    <script src="{% static "myadmin/js/demo/datatables-demo.js"%}"></script>
+
+</body>
+{% block js %}{% endblock %}
+</html>

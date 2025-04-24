@@ -1,0 +1,528 @@
+{% extends 'base-index.html' %}
+{% load static %}
+
+{% block css %}
+    {#    <link href="{% static "main/css/index.css" %}" rel="stylesheet" type="text/css">#}
+    <style>
+        .hero-section {
+            text-align: center;
+            padding: 3rem 0;
+            background: linear-gradient(135deg, rgba(26, 31, 60, 0.1), rgba(45, 54, 99, 0.1));
+            border-radius: 20px;
+            margin-bottom: 2rem;
+        }
+
+        .hero-title {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .hero-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            border-radius: 2px;
+        }
+
+        .hero-description {
+            color: #4a5568;
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .scan-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-top: 2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .scan-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .scan-title {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .custom-file {
+            margin-bottom: 2rem;
+        }
+
+        .custom-file-input {
+            cursor: pointer;
+        }
+
+        .custom-file-label {
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            border: 2px dashed #cbd5e1;
+        }
+
+        .custom-file-label i {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .model-select-container {
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+        }
+
+        .model-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .model-option {
+            position: relative;
+            padding: 1.5rem;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .model-option:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            border-color: var(--accent-color);
+        }
+
+        .model-option.selected {
+            border-color: var(--primary-color);
+            background: linear-gradient(135deg, rgba(var(--primary-color-rgb), 0.05), rgba(var(--accent-color-rgb), 0.05));
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .model-option-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .model-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .model-name {
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+        }
+
+        .model-description {
+            color: #4a5568;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .model-features {
+            margin-top: 1rem;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            color: #4a5568;
+            font-size: 0.9rem;
+        }
+
+        .feature-item i {
+            color: var(--primary-color);
+            font-size: 0.8rem;
+        }
+
+        .selected-badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: var(--primary-color);
+            color: white;
+            padding: 0.5rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: none;
+        }
+
+        .model-option.selected .selected-badge {
+            display: block;
+        }
+
+        .scan-button {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .scan-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .scan-button i {
+            font-size: 1.2rem;
+        }
+
+        #result-echarts {
+            margin-top: 2rem;
+        }
+
+        .result-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            height: 400px;
+        }
+
+        .result-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        #loading {
+            margin-left: 1rem;
+        }
+
+        /* 新增数据集详情样式 */
+        .dataset-info {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .dataset-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: linear-gradient(135deg, rgba(26, 31, 60, 0.05), rgba(45, 54, 99, 0.05));
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-3px);
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #4a5568;
+            font-size: 0.9rem;
+        }
+
+        /* 新增操作指南样式 */
+        .guide-section {
+            margin-top: 3rem;
+            padding: 2rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .guide-title {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .guide-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .step-item {
+            position: relative;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .step-item:hover {
+            transform: translateY(-3px);
+        }
+
+        .step-number {
+            position: absolute;
+            top: -15px;
+            left: -15px;
+            width: 30px;
+            height: 30px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+    </style>
+{% endblock %}
+
+{% block main_body %}
+    <div class="container">
+        <div class="hero-section">
+            <h1 class="hero-title">
+                <i class="fas fa-shield-alt"></i>
+                深度学习网络攻击检测与分类系统
+            </h1>
+            <p class="hero-description">
+                通过先进的深度学习算法，为您的系统提供智能化的安全防护。
+                我们的系统能够实时检测和分析潜在的安全威胁，为您的网络安全保驾护航。
+            </p>
+        </div>
+
+        <!-- 新增数据集详情部分 -->
+        <div class="dataset-info">
+            <h3 class="scan-title">
+                <i class="fas fa-database"></i>
+                数据集概况
+            </h3>
+            <div class="dataset-stats">
+                <div class="stat-item">
+                    <div class="stat-value">100K+</div>
+                    <div class="stat-label">样本数量</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">99%</div>
+                    <div class="stat-label">检测准确率</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">10+</div>
+                    <div class="stat-label">攻击类型</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">24/7</div>
+                    <div class="stat-label">实时监控</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="scan-card">
+            <form id="scan-form" method="post">
+                {% csrf_token %}
+                <h3 class="scan-title">
+                    <i class="fas fa-upload"></i>
+                    上传测试数据集
+                </h3>
+
+                <div class="custom-file mb-3">
+                    <input type="file" class="custom-file-input" id="file-input">
+                    <label class="custom-file-label" for="file-input" id="file-input-label">
+                        <i class="fas fa-file-alt"></i>
+                        选择文件(TXT格式)
+                    </label>
+                </div>
+
+                <div class="model-select-container">
+                    <label class="scan-title" for="model-select">
+                        <i class="fas fa-brain"></i>
+                        选择检测模型
+                    </label>
+                    <div class="model-options">
+                        <div class="model-option" data-model="model1" onclick="selectModel(this, 'model1')">
+                            <div class="selected-badge">
+                                <i class="fas fa-check"></i> 已选择
+                            </div>
+                            <div class="model-option-header">
+                                <div class="model-icon">
+                                    <i class="fas fa-shield-alt"></i>
+                                </div>
+                                <div class="model-name">二分类模型</div>
+                            </div>
+                            <div class="model-description">
+                                基础威胁检测模型，适用于快速识别恶意流量
+                            </div>
+                            <div class="model-features">
+                                <div class="feature-item">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>95%以上检测准确率</span>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>快速处理大量数据</span>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>实时检测响应</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="model-option" data-model="model2" onclick="selectModel(this, 'model2')">
+                            <div class="selected-badge">
+                                <i class="fas fa-check"></i> 已选择
+                            </div>
+                            <div class="model-option-header">
+                                <div class="model-icon">
+                                    <i class="fas fa-shield-alt"></i>
+                                </div>
+                                <div class="model-name">多分类模型</div>
+                            </div>
+                            <div class="model-description">
+                                高级威胁分析模型，可识别多种攻击类型
+                            </div>
+                            <div class="model-features">
+                                <div class="feature-item">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>支持多种攻击类型识别</span>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>详细的威胁分析报告</span>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>高级安全防护能力</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-container">
+                    <button type="submit" class="scan-button" id="scan-button-id" onclick="importData()">
+                        <i class="fas fa-search"></i>
+                        开始检测
+                    </button>
+                    <div class="spinner-border text-primary" style="display: none" role="status" id="loading">
+                        <span class="visually-hidden"></span>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- 新增操作指南部分 -->
+        <div class="guide-section">
+            <h3 class="guide-title">
+                <i class="fas fa-book"></i>
+                操作指南
+            </h3>
+            <div class="guide-steps">
+                <div class="step-item">
+                    <div class="step-number">1</div>
+                    <h4>准备数据</h4>
+                    <p>准备符合格式要求的TXT格式数据文件，确保数据完整性和格式正确性。</p>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">2</div>
+                    <h4>选择模型</h4>
+                    <p>根据您的需求选择合适的检测模型，可选择基础威胁检测或高级威胁分析。</p>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">3</div>
+                    <h4>开始检测</h4>
+                    <p>点击"开始检测"按钮，系统将自动分析数据并生成可视化报告。</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="result-echarts" style="display: none">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="result-card">
+                        <div class="card-body">
+                            <div id="chart-container0" style="width: 100%; height: 100%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="result-card">
+                        <div class="card-body">
+                            <div id="chart-container1" style="width: 100%; height: 100%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script src="{% static "main/js/index.js" %}"></script>
+    <script src="{% static "dist/echarts.min.js" %}"></script>
+    <script>
+        function selectModel(element, modelId) {
+            // 移除其他选项的选中状态
+            document.querySelectorAll('.model-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+
+            // 添加当前选项的选中状态
+            element.classList.add('selected');
+
+            // 更新隐藏的 input 值（如果需要）
+            document.getElementById('model-select').value = modelId;
+        }
+    </script>
+{% endblock %}

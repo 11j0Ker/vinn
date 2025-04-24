@@ -1,0 +1,255 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Forgot Password</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="{% static "myadmin/vendor/fontawesome-free/css/all.min.css"%}" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="{% static "myadmin/css/sb-admin-2.min.css"%}" rel="stylesheet">
+
+    <style>
+        .bg-gradient-primary {
+            background: linear-gradient(135deg, #1a2b4d 0%, #0a1528 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .bg-gradient-primary::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(255, 255, 255, 0.03) 0px,
+                rgba(255, 255, 255, 0.03) 1px,
+                transparent 1px,
+                transparent 10px
+            );
+            animation: backgroundMove 20s linear infinite;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .register-info {
+            padding: 2rem;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .register-title {
+            color: #1a2b4d;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .register-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, #4e73df, #224abe);
+            border-radius: 3px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: rgba(78, 115, 223, 0.05);
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-item:hover {
+            transform: translateX(10px);
+        }
+
+        .feature-item i {
+            font-size: 1.5rem;
+            margin-right: 1rem;
+            color: #4e73df;
+        }
+
+        .error-message {
+            padding: 10px;
+            margin-top: 1rem;
+            border-radius: 5px;
+            background-color: #ffe6e6;
+            color: #dc3545;
+            text-align: center;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .reset-password-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .reset-title {
+            color: #1a2b4d;
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .reset-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, #4e73df, #224abe);
+            border-radius: 3px;
+        }
+
+        .captcha-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .captcha-container img {
+            height: 32px;
+            border-radius: 4px;
+        }
+
+        .captcha-container input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #d1d3e2;
+            border-radius: 25px;
+            font-size: 16px;
+        }
+    </style>
+
+</head>
+
+<body class="bg-gradient-primary">
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-10 col-lg-12 col-md-9">
+                <div class="card o-hidden border-0 shadow-lg my-5">
+                    <div class="card-body p-0">
+                        <div class="row">
+                            <div class="col-lg-7 d-none d-lg-block">
+                                <div class="register-info">
+                                    <h2 class="register-title">
+                                        <i class="fas fa-key mr-2"></i>
+                                        密码重置
+                                    </h2>
+                                    <div class="feature-list">
+                                        <div class="feature-item">
+                                            <i class="fas fa-lock-open"></i>
+                                            <div>
+                                                <h5 class="mb-1">安全重置</h5>
+                                                <p class="mb-0">通过验证码确保账户安全</p>
+                                            </div>
+                                        </div>
+                                        <div class="feature-item">
+                                            <i class="fas fa-shield-alt"></i>
+                                            <div>
+                                                <h5 class="mb-1">即时生效</h5>
+                                                <p class="mb-0">密码修改后立即生效</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-5">
+                                <div class="p-5">
+                                    <div class="text-center">
+                                        <h1 class="reset-title">重置密码</h1>
+                                    </div>
+                                    <form action="{% url 'forgot_pd' %}" method="post" class="user">
+                                        {% csrf_token %}
+                                        <div class="form-group">
+                                            <input class="form-control form-control-user" name="username" placeholder="用户名" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="password" name="pass" class="form-control form-control-user" placeholder="新密码" required>
+                                        </div>
+                                        <div class="form-group captcha-container">
+                                            {{ captcha_form.captcha }}
+                                        </div>
+                                        <button type="submit" class="btn btn-primary btn-user btn-block">
+                                            确认重置
+                                        </button>
+                                    </form>
+                                    <hr>
+                                    <div class="text-center">
+                                        <a class="small" href="{% url 'myadmin_login' %}">
+                                            <i class="fas fa-arrow-left mr-1"></i>返回登录
+                                        </a>
+                                    </div>
+                                    <div class="error-message" id="error-message">
+                                        {{ info }}
+                                        {{ msg }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="{% static "myadmin/vendor/jquery/jquery.min.js"%}></script>
+    <script src="{% static "myadmin/vendor/bootstrap/js/bootstrap.bundle.min.js"%}></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="{% static "myadmin/vendor/jquery-easing/jquery.easing.min.js"%}></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="{% static "myadmin/js/sb-admin-2.min.js"%}></script>
+
+</body>
+    <script>
+    // 获取错误信息的元素
+    var errorMessage = document.getElementById("error-message");
+
+    // 设置1秒后隐藏错误信息
+    setTimeout(function () {
+        errorMessage.style.display = "none";
+    }, 1000);
+</script>
+</html>
